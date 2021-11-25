@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import stubs from "./defaultStubs";
 import moment from "moment";
 import "./components/style.css";
-// import ace from "ace";
-import * as ace from 'ace-builds/src-noconflict/ace';
+import "./components/Ace";
 
 function App() {
   const [code, setCode] = useState("");
@@ -99,11 +98,69 @@ function App() {
   };
 
   return (
-    <div className="App" id="header">
-      <div id="logo">Code with Me</div>
-      <div>
+    <div className="App">
+      <div id="header">
+        <div id="logo">Code with Me</div>
+        <div id="button-containers">
+          <button onClick={handleSubmit} id="run-button">Submit</button>
+        </div>
+      </div>
+
+
+      <br />
+
+      <br />
+      {/* <textarea
+        rows="20"
+        cols="75"
+        value={code}
+        onChange={(e) => { setCode(e.target.value); }}>
+      </textarea> */}
+      <br />
+
+      <div id="options-panel">
+
+        Theme: &nbsp;
+        <select id="themes" class="dropdown" onchange="selectTheme()">
+          <option value="ambiance">Ambiance</option>
+          <option value="chaos">Chaos</option>
+          <option value="chrome">Chrome</option>
+          <option value="clouds">Clouds</option>
+          <option value="clouds_midnight">Clouds Midnight</option>
+          <option value="cobalt">Cobalt</option>
+          <option value="crimson_editor">Crimson Editor</option>
+          <option value="dawn">Dawn</option>
+          <option value="dracula">Dracula</option>
+          <option value="dreamweaver">Dreamweaver</option>
+          <option value="eclipse">Eclipse</option>
+          <option value="github">Github</option>
+          <option value="gob">Gob</option>
+          <option value="gruvbox">Gruvbox</option>
+          <option value="idle_fingers">IDLE Fingers</option>
+          <option value="iplastic">Iplastic</option>
+          <option value="katzenmilch">Katzenmilch</option>
+          <option value="kr_theme">Kr Theme</option>
+          <option value="kuroir">Kuroir</option>
+          <option value="merbivore">Merbivore</option>
+          <option value="merbivore_soft">Merbivore Soft</option>
+          <option value="mono_industrial">Mono Industrial</option>
+          <option value="monokai">Monokai</option>
+          <option value="nord_dark">Nord Dark</option>
+          <option value="one_dark" selected>One Dark</option>
+          <option value="pastel_on_dark">Pastel On Dark</option>
+          <option value="solarized_dark">Solarized Dark</option>
+          <option value="solarized_light">Solarized Light</option>
+          <option value="sqlserver">SQL Server</option>
+          <option value="terminal">Terminal</option>
+          <option value="textmate">Textmate</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="tomorrow_night">Tomorrow Night</option>
+          <option value="twilight">Twilight</option>
+          <option value="vibrant_ink">Vibrant Ink</option>
+          <option value="xcode">XCode</option>
+        </select>
         <label>Language:</label>
-        <select
+        <select id="languages" class="dropdown"
           value={language}
           onChange={(e) => {
             let response = window.confirm(
@@ -116,35 +173,34 @@ function App() {
         >
           <option value="cpp">C++</option>
           <option value="py">Python</option>
+          <option value="csharp">C#</option>
+          <option value="golang">Golang</option>
+          <option value="java">Java</option>
+          <option value="javascript">Javascript</option>
+          <option value="julia">Julia</option>
+          <option value="lua">Lua</option>
+          <option value="pascal">Pascal</option>
+          <option value="perl">Perl</option>
+          <option value="php">PHP</option>
         </select>
+        <div>
+          <button onClick={setDefaultLanguage}>Set Default</button>
+        </div>
       </div>
-      <br />
-      <div>
-        <button onClick={setDefaultLanguage}>Set Default</button>
-      </div>
-      <br />
-      <textarea
-        rows="20"
-        cols="75"
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-        }}
-      ></textarea>
-      <br />
-      <div id="button-containers">
-        <button onClick={handleSubmit} id="run-button">Submit</button>
-      </div>
-      <p>{status}</p>
-      <p>{jobId ? `\nJob ID: ${jobId}` : ""}</p>
-      <p>{renderTimeDetails()}</p>
+
+
+
       <div id="workspace">
 
         <div id="editor"></div>
 
         <div id="output-panel">
           <div id="resizer"></div>
-          <div id="output">{output}</div>
+          <div id="output"><p>{status}</p>
+            <p>{jobId ? `\nJob ID: ${jobId}` : ""}</p>
+            <p>{renderTimeDetails()}</p>
+            {output}
+          </div>
         </div>
       </div>
     </div>
