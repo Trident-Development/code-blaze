@@ -4,9 +4,7 @@ import React, { useState, useEffect } from "react";
 import stubs from "./defaultStubs";
 import moment from "moment";
 import "./components/style.css";
-// import "./components/Editor";
-// import * as React from 'react';
-// import * as ReactDOM from 'react-dom';
+import {themeOptions, languageOptions }from "./components/options.js";
 import AceEditor from 'react-ace';
 
 function App() {
@@ -120,42 +118,7 @@ function App() {
 
         Theme: &nbsp;
         <select id="themes" class="dropdown" onchange="selectTheme()">
-          <option value="ambiance">Ambiance</option>
-          <option value="chaos">Chaos</option>
-          <option value="chrome">Chrome</option>
-          <option value="clouds">Clouds</option>
-          <option value="clouds_midnight">Clouds Midnight</option>
-          <option value="cobalt">Cobalt</option>
-          <option value="crimson_editor">Crimson Editor</option>
-          <option value="dawn">Dawn</option>
-          <option value="dracula">Dracula</option>
-          <option value="dreamweaver">Dreamweaver</option>
-          <option value="eclipse">Eclipse</option>
-          <option value="github">Github</option>
-          <option value="gob">Gob</option>
-          <option value="gruvbox">Gruvbox</option>
-          <option value="idle_fingers">IDLE Fingers</option>
-          <option value="iplastic">Iplastic</option>
-          <option value="katzenmilch">Katzenmilch</option>
-          <option value="kr_theme">Kr Theme</option>
-          <option value="kuroir">Kuroir</option>
-          <option value="merbivore">Merbivore</option>
-          <option value="merbivore_soft">Merbivore Soft</option>
-          <option value="mono_industrial">Mono Industrial</option>
-          <option value="monokai">Monokai</option>
-          <option value="nord_dark">Nord Dark</option>
-          <option value="one_dark" selected>One Dark</option>
-          <option value="pastel_on_dark">Pastel On Dark</option>
-          <option value="solarized_dark">Solarized Dark</option>
-          <option value="solarized_light">Solarized Light</option>
-          <option value="sqlserver">SQL Server</option>
-          <option value="terminal">Terminal</option>
-          <option value="textmate">Textmate</option>
-          <option value="tomorrow">Tomorrow</option>
-          <option value="tomorrow_night">Tomorrow Night</option>
-          <option value="twilight">Twilight</option>
-          <option value="vibrant_ink">Vibrant Ink</option>
-          <option value="xcode">XCode</option>
+        {themeOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
         </select>
         <label>Language:</label>
         <select id="languages" class="dropdown"
@@ -169,17 +132,8 @@ function App() {
             }
           }}
         >
-          <option value="cpp">C++</option>
-          <option value="py">Python</option>
-          <option value="csharp">C#</option>
-          <option value="golang">Golang</option>
-          <option value="java">Java</option>
-          <option value="javascript">Javascript</option>
-          <option value="julia">Julia</option>
-          <option value="lua">Lua</option>
-          <option value="pascal">Pascal</option>
-          <option value="perl">Perl</option>
-          <option value="php">PHP</option>
+                {languageOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
+
         </select>
         <div>
           <button onClick={setDefaultLanguage}>Set Default</button>
