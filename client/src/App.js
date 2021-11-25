@@ -4,7 +4,10 @@ import React, { useState, useEffect } from "react";
 import stubs from "./defaultStubs";
 import moment from "moment";
 import "./components/style.css";
-import "./components/Ace";
+// import "./components/Editor";
+// import * as React from 'react';
+// import * as ReactDOM from 'react-dom';
+import AceEditor from 'react-ace';
 
 function App() {
   const [code, setCode] = useState("");
@@ -187,8 +190,23 @@ function App() {
 
       <div id="workspace">
 
-        <div id="editor"></div>
-
+      <AceEditor
+          mode="plain_text"
+          theme="github"
+          // onChange={this.onChange}
+          name="UNIQUE_ID_OF_DIV"
+          showGutter={true}
+          wrapEnabled={true}
+          highlightActiveLine={true}
+          editorProps={{ $blockScrolling: true }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          setOptions={{
+            enableSnippets: true,
+            // fontFamily: "tahoma",
+            fontSize: "10pt"
+          }}
+        />
         <div id="output-panel">
           <div id="resizer"></div>
           <div id="output"><p>{status}</p>
@@ -197,8 +215,10 @@ function App() {
             {output}
           </div>
         </div>
+        </div>
+        
       </div>
-    </div>
+    // </div>
   );
 }
 
