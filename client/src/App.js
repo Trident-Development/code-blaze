@@ -106,17 +106,12 @@ function App() {
         </div>
       </div>
 
-
-      <br />
-
-      <br />
       {/* <textarea
         rows="20"
         cols="75"
         value={code}
         onChange={(e) => { setCode(e.target.value); }}>
       </textarea> */}
-      <br />
 
       <div id="options-panel">
 
