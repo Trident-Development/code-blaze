@@ -4,8 +4,10 @@ import React, { useState, useEffect } from "react";
 import stubs from "./defaultStubs";
 import moment from "moment";
 import "./components/style.css";
-import {themeOptions, languageOptions }from "./components/options.js";
+import { themeOptions, languageOptions } from "./components/options.js";
 import AceEditor from 'react-ace';
+// require("amd-loader");
+// import ace from "./lib/src-min-noconflict/ace";
 
 function App() {
   const [code, setCode] = useState("");
@@ -14,6 +16,7 @@ function App() {
   const [jobId, setJobId] = useState(null);
   const [status, setStatus] = useState(null);
   const [jobDetails, setJobDetails] = useState(null);
+
 
   useEffect(() => {
     const defaultLang = localStorage.getItem("default-language") || "cpp";
@@ -118,7 +121,7 @@ function App() {
 
         Theme: &nbsp;
         <select id="themes" class="dropdown" onchange="selectTheme()">
-        {themeOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
+          {themeOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
         </select>
         <label>Language:</label>
         <select id="languages" class="dropdown"
@@ -132,8 +135,7 @@ function App() {
             }
           }}
         >
-                {languageOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
-
+          {languageOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
         </select>
         <div>
           <button onClick={setDefaultLanguage}>Set Default</button>
@@ -144,11 +146,12 @@ function App() {
 
       <div id="workspace">
 
-      <AceEditor
+        <AceEditor
           mode="plain_text"
           theme="github"
-          // onChange={this.onChange}
-          name="UNIQUE_ID_OF_DIV"
+          value={code}
+          // onChange={(e) => { setCode(e.target.value); }}
+          name="editor"
           showGutter={true}
           wrapEnabled={true}
           highlightActiveLine={true}
@@ -157,21 +160,22 @@ function App() {
           enableLiveAutocompletion={true}
           setOptions={{
             enableSnippets: true,
-            // fontFamily: "tahoma",
             fontSize: "10pt"
           }}
         />
         <div id="output-panel">
           <div id="resizer"></div>
-          <div id="output"><p>{status}</p>
+          <div id="output">
+            <p>{status}</p>
             <p>{jobId ? `\nJob ID: ${jobId}` : ""}</p>
-            <p>{renderTimeDetails()}</p>
+            <p>{renderTimeDetails()}</p><br />
+            <p>Output:</p>
             {output}
           </div>
         </div>
-        </div>
-        
       </div>
+
+    </div>
     // </div>
   );
 }
