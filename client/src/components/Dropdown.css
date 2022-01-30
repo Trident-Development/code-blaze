@@ -1,0 +1,30 @@
+#container {
+    display: flex;
+}
+
+
+#label {
+    font-size: 17px;
+    margin-right: 10px;
+}
+
+
+
+#dropdown {
+    outline: none;
+    background-color: var(--dark);
+    font-family: 'Varela Round', sans-serif;
+    font-size: 17px;
+    color: var(--yellow);
+    height: fit-content;
+    border-radius: 10px;
+    border: 2px solid var(--light-blue);
+    height: 25px;
+    padding: 0 7px 0 7px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+#dropdown:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px #fff, 0 0 13px var(--light-blue);
+}
