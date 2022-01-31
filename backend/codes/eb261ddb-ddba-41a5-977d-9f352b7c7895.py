@@ -1,8 +1,0 @@
-def twoSum(nums, target: int):
-    for i in range(len(nums)):
-        for j in range(i+1, len(nums)):
-            if nums[i] + nums[j] == target:
-                return [i, j]
-    return
-
-print(twoSum([2,6,3,5,8, 10, 4, 5, 6, 7, 5,3,2,3,4,3,2,5,4,3,4,3,4,3,4,3,4,3,4,3,3,3,3,3,4,4,4,5,6,6,7,7,7,5,5,4,4,4,5,5,5,5,5,6,7,5,6,7,6,5,6,7,8, 2 ,4 ,5,6,6 ,4, 5, 6, 5,5], 5))
