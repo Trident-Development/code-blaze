@@ -24,7 +24,55 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-one_dark";
 import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-solarized_dark";
+import OutputPanel from './components/OutputPanel';
 
+
+let opwidth = 35;
+let outputWidth = `${opwidth}vw`
+
+let x;
+let w;
+let outputPanel;
+
+
+const mouseMoveHandler = function(e) {
+  // distance the mouse has moved
+  let dx = e.clientX - x;
+  // adjust the dimensions of the element
+  opwidth = `${w - dx}px`;
+}
+
+
+const mouseUpHandler = function() {
+  // remove the handler of 'mousemove' and 'mouseup'
+  document.removeEventListener('mousemove', mouseMoveHandler);
+  document.removeEventListener('mouseup', mouseUpHandler);
+}
+
+
+
+const dragHandler = function(e) {
+  // get mouse x position
+  let x = e.clientX;
+  console.log(x);
+
+  w = parseInt(opwidth, 10);
+
+  // attach the listenser to document
+  document.getElementById("outputPanel").addEventListener('mousemove', mouseMoveHandler);
+  document.getElementById("outputPanel").addEventListener('mouseup', mouseUpHandler);
+}
+
+
+
+const createOutputPanel = function() {
+  outputPanel = (
+    <OutputPanel  id="outputPanel" width={opwidth}
+                      dragHandler={dragHandler}>
+      <div id="output">Output:</div>
+    </OutputPanel>
+  );
+}
 
 
 
@@ -33,11 +81,11 @@ class App extends React.Component {
 
   constructor() {
     super();
+
+    // set the initial state
     this.state = {
       language: 'c_cpp',
       theme: 'dracula',
-      editorWidth: '65vw',
-      outputWidth: '35vw',
     };
   }
 
@@ -72,7 +120,14 @@ class App extends React.Component {
 
 
 
+
+
+
+
+
   render() {
+
+    createOutputPanel();
 
     return (
       <div id="App">
@@ -107,7 +162,7 @@ class App extends React.Component {
         <div id="workspace">
           
           <AceEditor  mode={this.state.language} theme={this.state.theme}
-                      width={this.state.editorWidth} height='100%' fontSize={15}
+                      width={`${100-opwidth}vw`} height='100%' fontSize={15}
                       setOptions={{
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true,
@@ -116,9 +171,7 @@ class App extends React.Component {
                         tabSize: 4, showGutter: true
                       }}/>
           
-          <ResizableBox id="outputPanel" width={this.state.outputWidth}>
-            <div id="output">Output:</div>
-          </ResizableBox>
+          {outputPanel}
 
         </div>
 
