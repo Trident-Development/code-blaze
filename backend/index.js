@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+
+
 mongoose.connect(
     "mongodb://localhost/compilerdb",
     {
@@ -13,19 +15,23 @@ mongoose.connect(
     }
 );
 
+
 const { generateFile } = require("./generateFile");
 
 const { addJobToQueue } = require("./jobQueue");
+
 const Job = require("./models/Job");
 
 const app = express();
+
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 app.post("/run", async (req, res) => {
-    const { language = "cpp", code } = req.body;
+    const { language, code } = req.body;
 
     console.log(language, "Length:", code.length);
 
@@ -34,12 +40,18 @@ app.post("/run", async (req, res) => {
     }
     // need to generate a c++ file with content from the request
     const filepath = await generateFile(language, code);
+
     // write into DB
     const job = await new Job({ language, filepath }).save();
+    
     const jobId = job["_id"];
+
     addJobToQueue(jobId);
+
     res.status(201).json({ jobId });
 });
+
+
 
 app.get("/status", async (req, res) => {
     const jobId = req.query.id;
@@ -59,6 +71,8 @@ app.get("/status", async (req, res) => {
     return res.status(200).json({ success: true, job });
 });
 
-app.listen(5000, () => {
-    console.log(`Listening on port 5000!`);
+
+
+app.listen(5001, () => {
+    console.log(`Listening on port 5001!`);
 });
