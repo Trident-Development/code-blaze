@@ -13,6 +13,24 @@
 - [X] Middleware: Express.js
 
 ## Getting Started 🕹
+1. Install the dependencies
+```cmd
+$ cd client
+$ npm i
+$ cd ../backend
+$ npm i
+$ cd ..
+```
+2. Start the client
+```cmd
+$ cd client
+$ npm run start
+```
+3. Start the server
+```cmd
+$ cd ../backend
+$ npm run start
+```
 
 ## Pages 🎨
 ### Homescreen
