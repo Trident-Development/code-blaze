@@ -21,6 +21,8 @@ const { generateFile } = require("./generateFile");
 const { addJobToQueue } = require("./jobQueue");
 
 const Job = require("./models/Job");
+const { executeCpp } = require("./executeCpp");
+const { executePy } = require("./executePy");
 
 const app = express();
 
@@ -45,10 +47,14 @@ app.post("/run", async (req, res) => {
     const job = await new Job({ language, filepath }).save();
     
     const jobId = job["_id"];
-
+    console.log('Hi from index');
     addJobToQueue(jobId);
-
-    res.status(201).json({ jobId });
+    let output;
+    if (language === 'python'){
+        output = await executePy(filepath);
+    }
+    return res.json(output);
+    // res.status(201).json({ jobId });
 });
 
 

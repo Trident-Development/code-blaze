@@ -45,7 +45,7 @@ class App extends React.Component {
       language: 'cpp',
       theme: 'dracula',
       content: '',
-      output: 'DEFAULT DO NOT USE',
+      output: 'NULLS',
     };
     this.onRunButtonClicked = this.onRunButtonClicked.bind(this);
   }
@@ -72,7 +72,8 @@ class App extends React.Component {
     try {
       const { data } = await axios.post("http://localhost:5001/run", payload);
       if (data.jobId){}
-      console.log(data);
+      this.setState({output: data});
+      console.log(this.state.output);
     }
     catch ({ response }) {
       if (response) {
@@ -146,7 +147,7 @@ class App extends React.Component {
 
         </div>
 
-        <Workspace id="workspace" editor={this.editor} output = {this.output}></Workspace>
+        <Workspace id="workspace" editor={this.editor} output = {this.state.output}/>
 
       </div>
     );

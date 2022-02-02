@@ -10,7 +10,8 @@ class OutputPanel extends React.Component {
         this.props = props
         this.state = {
             x: 0,
-            width: props.width
+            width: props.width,
+            output: props.output
         };
     }
     
@@ -20,7 +21,7 @@ class OutputPanel extends React.Component {
         return (
             <div id="outputPanel" style={{ width: `${this.props.width}vw` }}>
                 <div id="resizer" onMouseDown={this.props.dragHandler}></div>
-                <div id="output">Output:</div>
+                <div id="output">Output: {this.state.output}</div>
             </div>
         );
     }
