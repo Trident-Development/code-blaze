@@ -1,0 +1,24 @@
+#resizer {
+  cursor: col-resize;
+  background-color: var(--gray);
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 8px;
+}
+
+
+
+#output {
+  background-color: var(--dark);
+  color: var(--light-gray);
+  padding: 20px 20px 20px 20px;
+  height: 100%;
+  width: 100%;
+  right: 0;
+  top: 0;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 15px;
+  white-space: pre-wrap;
+  overflow-y: overlay;
+}

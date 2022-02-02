@@ -3,6 +3,7 @@ const path = require('path');
 const { v4: uuid } = require('uuid');
 const dirCodes = path.join(__dirname, "codes");
 
+
 if (!fs.existsSync(dirCodes)) {
     fs.mkdirSync(dirCodes, { recursive: true });
 }
@@ -15,6 +16,7 @@ const generateFile = async (format, content) => {
     await fs.writeFileSync(filepath, content)
     return filepath
 };
+
 
 module.exports = {
     generateFile,

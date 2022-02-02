@@ -1,183 +1,158 @@
-import axios from "axios";
-import "./App.css";
-import React, { useState, useEffect } from "react";
-import stubs from "./defaultStubs";
-import moment from "moment";
-import "./components/style.css";
-import { themeOptions, languageOptions } from "./components/options.js";
+import React from 'react';
+import './App.css';
+import Dropdown from './components/Dropdown';
+import { themeOptions, languageOptions } from './options';
 import AceEditor from 'react-ace';
-// require("amd-loader");
-// import ace from "./lib/src-min-noconflict/ace";
-
-function App() {
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [language, setLanguage] = useState("cpp");
-  const [jobId, setJobId] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [jobDetails, setJobDetails] = useState(null);
+import Workspace from './components/Workspace';
+import axios from "axios";
 
 
-  useEffect(() => {
-    const defaultLang = localStorage.getItem("default-language") || "cpp";
-    setLanguage(defaultLang);
-  }, [])
-  useEffect(() => { setCode(stubs[language]) }, [language]);
+// import the languages
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-csharp";
+import "ace-builds/src-noconflict/mode-golang";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-perl";
+import "ace-builds/src-noconflict/mode-php";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-ruby";
 
-  const setDefaultLanguage = () => {
-    localStorage.setItem("default-language", language);
-    console.log(`${language} set as default language.`);
+// import the themes
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-one_dark";
+import "ace-builds/src-noconflict/theme-terminal";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+
+
+
+
+/**
+ * class App
+ */
+
+class App extends React.Component {
+
+  constructor() {
+    super();
+    this.editor = null;
+    
+    // set the initial state
+    this.state = {
+      language: 'cpp',
+      theme: 'dracula',
+      content: '',
+      output: 'NULLS',
+    };
+    this.onRunButtonClicked = this.onRunButtonClicked.bind(this);
   }
-  let pollInterval;
-  const renderTimeDetails = () => {
-    if (!jobDetails) {
-      return "";
-    }
-    let result = '';
-    let { submittedAt, completedAt, startedAt } = jobDetails;
-    submittedAt = moment(submittedAt).toString()
-    result += `\nSubmitted At: ${submittedAt}`;
-    if (!completedAt || !startedAt) {
-      return result;
-    }
 
-    const start = moment(startedAt);
-    const end = moment(completedAt);
-    const executionTime = end.diff(start, 'seconds', true);
-    result += ` | Execution Time: ${executionTime}s`;
-    return result;
+  onLanguageChanged = (language) => {
+    this.setState({ language: language });
   }
-  const handleSubmit = async () => {
+
+  onThemeChanged = (theme) => {
+    this.setState({ theme: theme });
+  }
+
+  
+  async onRunButtonClicked() {
+
+    alert(this.state.content);
+    let language = this.state.language;
+    let code = this.state.content;
     const payload = {
       language,
       code,
     };
+    
     try {
-      setOutput("");
-      setStatus(null);
-      setJobId(null);
-      const { data } = await axios.post("http://localhost:5000/run", payload);
-      if (data.jobId) {
-        setJobId(data.jobId);
-        setStatus("Submitted.");
-
-        // poll here
-        pollInterval = setInterval(async () => {
-          const { data: statusRes } = await axios.get(
-            `http://localhost:5000/status`,
-            {
-              params: {
-                id: data.jobId,
-              },
-            }
-          );
-          const { success, job, error } = statusRes;
-          console.log(statusRes);
-          if (success) {
-            const { status: jobStatus, output: jobOutput } = job;
-            setStatus(jobStatus);
-            setJobDetails(job);
-            setStatus(jobStatus);
-            if (jobStatus === "pending") return;
-            setOutput(jobOutput);
-            clearInterval(pollInterval);
-          } else {
-            console.error(error);
-            setOutput(error);
-            setStatus("Bad request");
-            clearInterval(pollInterval);
-          }
-        }, 1000);
-      } else {
-        setOutput("Retry again.");
-      }
-    } catch ({ response }) {
+      const { data } = await axios.post("http://localhost:5001/run", payload);
+      if (data.jobId){}
+      this.setState({output: data});
+      console.log(this.state.output);
+    }
+    catch ({ response }) {
       if (response) {
         const errMsg = response.data.err.stderr;
-        setOutput(errMsg);
-      } else {
-        setOutput("Please retry submitting.");
+        alert(errMsg);
+      }
+      else {
+        
       }
     }
-  };
+  }
 
-  return (
-    <div className="App">
-      <div id="header">
-        <div id="logo">Code with Me</div>
-        <div id="button-containers">
-          <button onClick={handleSubmit} id="run-button">Submit</button>
-        </div>
-      </div>
+  
 
-      {/* <textarea
-        rows="20"
-        cols="75"
-        value={code}
-        onChange={(e) => { setCode(e.target.value); }}>
-      </textarea> */}
-
-      <div id="options-panel">
-
-        Theme: &nbsp;
-        <select id="themes" class="dropdown" onchange="selectTheme()">
-          {themeOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
-        </select>
-        <label>Language:</label>
-        <select id="languages" class="dropdown"
-          value={language}
-          onChange={(e) => {
-            let response = window.confirm(
-              "WARNING: Switching the language will remove your exisisting code!"
-            );
-            if (response) {
-              setLanguage(e.target.value);
-            }
-          }}
-        >
-          {languageOptions.map(({ value, label }, index) => <option value={value} >{label}</option>)}
-        </select>
-        <div>
-          <button onClick={setDefaultLanguage}>Set Default</button>
-        </div>
-      </div>
+  setContent(value) {
+    this.setState({ content: value })
+  }
 
 
 
-      <div id="workspace">
+  createEditor() {
+    this.editor = (
+      <AceEditor  mode={this.state.language} theme={this.state.theme}
+                        height='100%' fontSize={15} width="75vw"
+                        onChange={value => {this.setContent(value);}}
+                        setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: true, showPrintMargin: true,
+                        showLineNumbers: true,
+                        tabSize: 4, showGutter: true
+                        }}/>
+    )
+  }
 
-        <AceEditor
-          mode="plain_text"
-          theme="github"
-          value={code}
-          // onChange={(e) => { setCode(e.target.value); }}
-          name="editor"
-          showGutter={true}
-          wrapEnabled={true}
-          highlightActiveLine={true}
-          editorProps={{ $blockScrolling: true }}
-          enableBasicAutocompletion={true}
-          enableLiveAutocompletion={true}
-          setOptions={{
-            enableSnippets: true,
-            fontSize: "10pt"
-          }}
-        />
-        <div id="output-panel">
-          <div id="resizer"></div>
-          <div id="output">
-            <p>{status}</p>
-            <p>{jobId ? `\nJob ID: ${jobId}` : ""}</p>
-            <p>{renderTimeDetails()}</p><br />
-            <p>Output:</p>
-            {output}
+
+
+  /**
+   * Render client
+   * @returns Components
+   */
+  render() {
+
+    this.createEditor();
+
+    return (
+      <div id="App">
+        
+        {/*Header bar on top of the screen*/}
+        <div id="headerBar">
+
+          <div id="logo">
+            <label>CodeBlaze</label>
+            <label id="description">An online collorative IDE</label>
           </div>
-        </div>
-      </div>
 
-    </div>
-    // </div>
-  );
+          <div id="buttonsContainer">
+
+            <div id="dropdownContainer">
+              <Dropdown id="themeDropdown" width="155px" label="Theme" 
+                  options={themeOptions} onSelect={this.onThemeChanged} />
+              <Dropdown id="langDropdown" width="125px" label="Language"
+                  options={languageOptions} onSelect={this.onLanguageChanged} />
+            </div>
+
+            <button id="runButton" onClick={this.onRunButtonClicked}>
+              Run Code
+            </button>
+
+          </div>
+
+        </div>
+
+        <Workspace id="workspace" editor={this.editor} output = {this.state.output}/>
+
+      </div>
+    );
+  }
 }
+
 
 export default App;

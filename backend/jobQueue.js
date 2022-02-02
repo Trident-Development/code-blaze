@@ -8,17 +8,19 @@ const jobQueue = new Queue("job-runner-queue");
 const NUM_WORKERS = 5;
 
 jobQueue.process(NUM_WORKERS, async ({ data }) => {
+    console.log('OMGGGGIFHEIFJEWIFJWIJEFEJI!');
     const jobId = data.id;
     const job = await Job.findById(jobId);
     if (job === undefined) {
         throw Error(`cannot find Job with id ${jobId}`);
     }
     try {
+        console.log('OMG!!!!!!!UQWFNW');
         let output;
         job["startedAt"] = new Date();
         if (job.language === "cpp") {
             output = await executeCpp(job.filepath);
-        } else if (job.language === "py") {
+        } else if (job.language === "python") {
             output = await executePy(job.filepath);
         }
         job["completedAt"] = new Date();
@@ -40,6 +42,7 @@ jobQueue.on("failed", (error) => {
 });
 
 const addJobToQueue = async (jobId) => {
+    console.log('les gooo huh');
     jobQueue.add({
         id: jobId,
     });
